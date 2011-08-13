@@ -25,11 +25,22 @@ Creating the simplest possible test should look like:
 
         testSomething: function(test) {
             test.ok(true);
+            test.done();
         }
 
     });
 
-However, this is pretty useless. A more common example would be:
+However, this is pretty useless. Assuming a project structure like this:
+
+    ./
+    ./base.htm
+    ./js
+    ./js/jquery.min.js
+    ./js/myawesome.js
+    ./tests
+    ./tests/test_advanced.js
+
+...test\_advanced.js might look something like:
 
     var domTest = require("domtest");
 
@@ -46,10 +57,12 @@ However, this is pretty useless. A more common example would be:
             callback();
         },
 
-        testSomeLibrary: function(test) {
+        testjQuery: function(test) {
             var title = this.$("h1").text()
             test.equals(title, "LOL I HAZ A CAT");
+            test.done();
 
+        testMyLibrary: function(test) {
             var result = this.MyAwesomeObject.doIHazCat();
             test.ok(result);
             test.done();
@@ -81,6 +94,10 @@ that begin with "test":
 
 Since it wraps NodeUnit, it should also bring in any plain NodeUnit
 TestCase objects too, not just domTests.
+
+Currently, there's an issue where you'll need to press Ctrl-C when the
+tests are finished. (It will say "OK" or "FAIL" to let you know that it's
+done.) Some callback is not being fired, apparently.
 
 DomTest Options
 ---------------
